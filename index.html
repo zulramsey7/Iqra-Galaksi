@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Iqra' Galaksi</title>
+  <link href="output.css" rel="stylesheet">
+  <link rel="icon" href="/icon.png" />
+  <link rel="manifest" href="/manifest.json" />
+
+
+  <style>
+    body {
+      background-color: #0d1b2a;
+      color: white;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* Bintang bergerak */
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 200%;
+      height: 200%;
+      background: url('https://www.transparenttextures.com/patterns/stardust.png') repeat;
+      opacity: 0.15;
+      animation: starsMove 60s linear infinite;
+      z-index: 0;
+    }
+    @keyframes starsMove {
+      0% { transform: translate(0, 0); }
+      100% { transform: translate(-100px, -100px); }
+    }
+    .z-top {
+      position: relative;
+      z-index: 10;
+    }
+    footer {
+      text-align: center;
+      padding: 1rem 0;
+      color: #aaa;
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body class="text-white font-sans min-h-screen flex flex-col items-center justify-start px-4">
+
+  <!-- Audio Latar -->
+  <audio id="bg-music" src="audio/lagu-latar.mp3" loop autoplay></audio>
+
+  <!-- Semua kandungan berada di atas lapisan bintang -->
+  <div class="container max-w-screen-md mx-auto text-center space-y-8 z-top">
+
+    <!-- 🌙 Logo dan Tajuk -->
+    <div>
+      <h1 class="text-4xl md:text-6xl font-bold text-blue-400 drop-shadow-lg">🌙Iqra' Galaksi</h1>
+      <p class="mt-4 text-lg md:text-xl text-gray-300">Selamat datang, angkasawan kecil! 🚀</p>
+    </div>
+
+    <!-- 🤖 Watak Robot AI -->
+    <div>
+      <img src="https://i.ibb.co/7JpZ56mn/Chat-GPT-Image-Aug-3-2025-03-24-29-PM.png" alt="Robot AI"
+           class="w-40 max-w-xs mx-auto animate-bounce" />
+      <p class="mt-2 text-sm text-gray-400 italic">saya ANAQI teman mengaji angkasa anda!</p>
+    </div>
+
+    <!-- 🔘 Butang Navigasi -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6">
+      <a href="mula-belajar.html" class="bg-blue-600 hover:bg-blue-700 text-white py-3 px-6 rounded-xl shadow-lg transition-all text-center">📘 Mula Belajar</a>
+      <a href="mini-game.html" class="bg-indigo-600 hover:bg-indigo-700 text-white py-3 px-6 rounded-xl shadow-lg transition-all text-center">🎮 Main Mini Game</a>
+      <a href="#" class="bg-yellow-500 hover:bg-yellow-600 text-black py-3 px-6 rounded-xl shadow-lg transition-all text-center">📊 Lihat Prestasi</a>
+      <a href="#" class="bg-gray-700 hover:bg-gray-800 text-white py-3 px-6 rounded-xl shadow-lg transition-all text-center">ℹ️ Tentang App</a>
+    </div>
+
+  </div>
+
+  <!-- Footer -->
+  <footer>© 2025 App Iqra’ Galaksi by Anaqi</footer>
+
+  <!-- Skrip Main Audio Senyap & Autoplay Fallback -->
+  <script>
+    window.addEventListener('DOMContentLoaded', function () {
+      const music = document.getElementById('bg-music');
+      music.volume = 0.1;  // Volume 10%
+
+      // Beberapa browser perlukan interaksi sebelum autoplay
+      document.body.addEventListener('click', () => {
+        if (music.paused) {
+          music.play().catch(() => {});
+        }
+      }, { once: true });
+    });
+  </script>
+
+</body>
+</html>

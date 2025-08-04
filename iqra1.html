@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>📘 Iqra' 1 - Huruf Hijaiyah</title>
+  <link href="output.css" rel="stylesheet">
+  <style>
+    body {
+      background-color: #0f172a;
+      font-family: 'Comic Sans MS', cursive;
+      position: relative;
+        overflow-x: hidden;
+      }
+
+
+    .bg-stars {
+      background: url('https://www.transparenttextures.com/patterns/stardust.png');
+      animation: moveStars 60s linear infinite;
+      position: fixed;
+      width: 200%;
+      height: 200%;
+      top: 0;
+      left: 0;
+      z-index: 0;
+      opacity: 0.15;
+      background-repeat: repeat;
+    }
+
+    @keyframes moveStars {
+      0% {
+        transform: translate(0, 0);
+      }
+      100% {
+        transform: translate(-100px, -100px);
+      }
+    }
+
+    .button-huruf:hover {
+      transform: scale(1.1);
+      background-color: #38bdf8;
+    }
+
+    .glow {
+      animation: glow-animation 0.5s ease-out;
+    }
+
+    @keyframes glow-animation {
+      0% {
+        box-shadow: 0 0 0px rgba(255, 255, 0, 0.8);
+        transform: scale(1);
+      }
+      50% {
+        box-shadow: 0 0 20px rgba(255, 255, 0, 1);
+        transform: scale(1.1);
+      }
+      100% {
+        box-shadow: 0 0 0px rgba(255, 255, 0, 0);
+        transform: scale(1);
+      }
+    }
+
+    audio {
+      display: none;
+    }
+  </style>
+</head>
+<body class="text-white relative overflow-x-hidden min-h-screen p-4">
+
+
+  <!-- Background Bintang -->
+  <div class="bg-stars"></div>
+
+  <!-- Kandungan -->
+  <div class="relative z-10 text-center">
+    <h1 class="text-3xl md:text-4xl font-bold text-yellow-300 mb-6">📘 Huruf Hijaiyah - Mari Belajar Huruf Hijaiyah</h1>
+
+    <div dir="rtl" class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-7 gap-4 text-4xl md:text-5xl mx-auto">
+
+      <!-- Huruf Hijaiyah -->
+
+      <button class="hijaiyah-btn bg-blue-700 text-white p-4 rounded-xl shadow-lg transition transform hover:scale-110 duration-300 cursor-pointer" data-audio="alif.mp3" aria-label="Alif">ا</button>
+      <button class="hijaiyah-btn bg-pink-600 text-white p-4 rounded-xl shadow-lg transition transform hover:scale-110 duration-300 cursor-pointer" data-audio="Ba.mp3" aria-label="Ba">ب</button>
+      <button class="hijaiyah-btn bg-green-500 text-white p-4 rounded-xl shadow-lg transition transform hover:scale-110 duration-300 cursor-pointer" data-audio="Ta.mp3" aria-label="Ta">ت</button>
+      <button class="hijaiyah-btn bg-purple-600 text-white p-4 rounded-xl shadow-lg transition transform hover:scale-110 duration-300 cursor-pointer" data-audio="Tsa.mp3" aria-label="Tsa">ث</button>
+      <button class="hijaiyah-btn bg-red-600 text-white p-4 rounded-xl shadow-lg transition transform hover:scale-110 duration-300 cursor-pointer" data-audio="Jim.mp3" aria-label="Jim">ج</button>
+      <button class="hijaiyah-btn bg-orange-500 text-white p-4 rounded-xl shadow-lg transition transform hover:scale-110 duration-300 cursor-pointer" data-audio="Ha.mp3" aria-label="Ha">ح</button>
+      <button class="hijaiyah-btn bg-blue-400 text-white p-4 rounded-xl shadow-lg transition transform hover:scale-110 duration-300 cursor-pointer" data-audio="Kha.mp3" aria-label="Kha">خ</button>
+      <button class="hijaiyah-btn bg-blue-400 text-white p-4 rounded-xl shadow-lg transition transform hover:scale-110 duration-300 cursor-pointer" data-audio="Dal.mp3" aria-label="Dal">د</button>
+      <button class="hijaiyah-btn bg-blue-400 text-white p-4 rounded-xl shadow-lg transition transform hover:scale-110 duration-300 cursor-pointer" data-audio="Dzal.mp3" aria-label="Dzal">ذ</button>
+      <button class="hijaiyah-btn bg-blue-400 text-white p-4 rounded-xl shadow-lg transition transform hover:scale-110 duration-300 cursor-pointer" data-audio="Ra.mp3" aria-label="Ra">ر</button>
+      <button class="hijaiyah-btn bg-blue-400 text-white p-4 rounded-xl shadow-lg transition transform hover:scale-110 duration-300 cursor-pointer" data-audio="Zai.mp3" aria-label="Zai">ز</button>
+      <button class="hijaiyah-btn bg-blue-400 text-white p-4 rounded-xl shadow-lg transition transform hover:scale-110 duration-300 cursor-pointer" data-audio="Sin.mp3" aria-label="Sin">س</button>
+      <button class="hijaiyah-btn bg-purple-700 text-white p-4 rounded-xl shadow-lg transition transform hover:scale-110 duration-300 cursor-pointer" aria-label="Syin">ش</button>
+      <button class="hijaiyah-btn bg-red-800 text-white p-4 rounded-xl shadow-lg transition transform hover:scale-110 duration-300 cursor-pointer" aria-label="Shod">ص</button>
+      <button class="hijaiyah-btn bg-orange-600 text-white p-4 rounded-xl shadow-lg transition transform hover:scale-110 duration-300 cursor-pointer" aria-label="Dhod">ض</button>
+      <button class="hijaiyah-btn bg-blue-700 text-white p-4 rounded-xl shadow-lg transition transform hover:scale-110 duration-300 cursor-pointer" aria-label="Tho">ط</button>
+      <button class="hijaiyah-btn bg-green-400 text-white p-4 rounded-xl shadow-lg transition transform hover:scale-110 duration-300 cursor-pointer" aria-label="Zho">ظ</button>
+      <button class="hijaiyah-btn bg-red-700 text-white p-4 rounded-xl shadow-lg transition transform hover:scale-110 duration-300 cursor-pointer" aria-label="Ain">ع</button>
+      <button class="hijaiyah-btn bg-gray-800 text-white p-4 rounded-xl shadow-lg transition transform hover:scale-110 duration-300 cursor-pointer" aria-label="Ghain">غ</button>
+      <button class="hijaiyah-btn bg-pink-400 text-white p-4 rounded-xl shadow-lg transition transform hover:scale-110 duration-300 cursor-pointer" aria-label="Fa">ف</button>
+      <button class="hijaiyah-btn bg-blue-500 text-white p-4 rounded-xl shadow-lg transition transform hover:scale-110 duration-300 cursor-pointer" aria-label="Qof">ق</button>
+      <button class="hijaiyah-btn bg-purple-700 text-white p-4 rounded-xl shadow-lg transition transform hover:scale-110 duration-300 cursor-pointer" aria-label="Kaf">ك</button>
+      <button class="hijaiyah-btn bg-orange-400 text-white p-4 rounded-xl shadow-lg transition transform hover:scale-110 duration-300 cursor-pointer" aria-label="Lam">ل</button>
+      <button class="hijaiyah-btn bg-orange-500 text-white p-4 rounded-xl shadow-lg transition transform hover:scale-110 duration-300 cursor-pointer" aria-label="Mim">م</button>
+      <button class="hijaiyah-btn bg-blue-400 text-white p-4 rounded-xl shadow-lg transition transform hover:scale-110 duration-300 cursor-pointer" aria-label="Nun">ن</button>
+      <button class="hijaiyah-btn bg-emerald-500 text-white p-4 rounded-xl shadow-lg transition transform hover:scale-110 duration-300 cursor-pointer" aria-label="Wau">و</button>
+      <button class="hijaiyah-btn bg-teal-700 text-white p-4 rounded-xl shadow-lg transition transform hover:scale-110 duration-300 cursor-pointer" aria-label="Ha’">ه</button>
+      <button class="hijaiyah-btn bg-indigo-800 text-white p-4 rounded-xl shadow-lg transition transform hover:scale-110 duration-300 cursor-pointer" aria-label="Lam Alif">لا</button>
+      <button class="hijaiyah-btn bg-pink-700 text-white p-4 rounded-xl shadow-lg transition transform hover:scale-110 duration-300 cursor-pointer" aria-label="Hamzah">ء</button>
+      <button class="hijaiyah-btn bg-green-400 text-white p-4 rounded-xl shadow-lg transition transform hover:scale-110 duration-300 cursor-pointer" aria-label="Ya">ي</button>
+    </div>
+
+    <!-- Audio -->
+    <audio id="audio-player" src=""></audio>
+
+    <!-- Butang kembali -->
+    <div class="mt-10">
+      <a href="mula belajar.html" class="inline-block bg-yellow-500 hover:bg-yellow-600 text-black px-6 py-3 rounded-lg text-lg font-semibold">⬅️ Kembali</a>
+      <footer>© 2025 App Iqra Galaksi by Anaqi</footer>
+  </div>
+
+  <!-- Skrip: Main audio dan glow -->
+  <!-- Skrip: Mainkan audio bila butang ditekan -->
+  <script>
+    document.querySelectorAll('.hijaiyah-btn').forEach(btn => {
+      btn.addEventListener('click', function () {
+        const audioFile = this.getAttribute('data-audio');
+        const audio = new Audio(`audio/${audioFile}`);
+        audio.play();
+
+        // Animasi glow (jika mahu)
+        this.classList.add('glow');
+        setTimeout(() => this.classList.remove('glow'), 500);
+      });
+    });
+  </script>
+
+
+</body>
+</html>

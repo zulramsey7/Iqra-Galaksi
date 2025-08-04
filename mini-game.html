@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="ms">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>🎮 Iqra' Galaksi - Mini Game</title>
+    <link href="output.css" rel="stylesheet">
+    <style>
+      body {
+        background-color: #0d1b2a;
+        color: white;
+        position: relative;
+          overflow-x: hidden;
+        }
+
+
+      /* 🎇 Animasi bintang bergerak */
+      .stars {
+        background: url('https://www.transparenttextures.com/patterns/stardust.png');
+        animation: moveStars 60s linear infinite;
+        position: fixed;
+        width: 200%;
+        height: 200%;
+        top: 0;
+        left: 0;
+        z-index: 0;
+        opacity: 0.2;
+        background-repeat: repeat;
+      }
+
+      @keyframes moveStars {
+        0% {
+          transform: translate(0, 0);
+        }
+        100% {
+          transform: translate(-100px, -100px);
+        }
+      }
+    </style>
+  </head>
+  <body class="text-white font-sans min-h-screen p-6 relative overflow-x-hidden">
+
+    <!-- 🌠 Latar Bintang Bergerak -->
+    <div class="stars"></div>
+
+    <!-- 🌟 Kandungan Utama -->
+    <div class="relative z-10">
+
+      <h1 class="text-4xl md:text-5xl font-bold text-center mb-10 text-blue-400">🎮 Mini Game Galaksi</h1>
+
+      <div class="flex flex-wrap justify-center gap-6">
+
+        <!-- Game Card -->
+        <div class="bg-blue-900 bg-opacity-40 rounded-2xl p-6 w-72 shadow-lg hover:scale-105 transition-all">
+          <img src="https://i.ibb.co/7JpZ56mn/Chat-GPT-Image-Aug-3-2025-03-24-29-PM.png"
+               alt="Game Icon"
+               class="w-24 h-24 mx-auto mb-4 animate-bounce" />
+
+          <h2 class="text-xl font-semibold text-center text-yellow-300">Kuiz Angkasa Iqra’</h2>
+          <p class="text-sm text-center text-gray-300 mt-2">Jawab soalan mudah sambil terbang di angkasa!</p>
+
+          <a href="kuiz-angkasa-iqra"
+             class="block mt-4 bg-blue-600 hover:bg-blue-700 text-white text-center py-2 rounded-lg">
+            MULA 🚀
+          </a>
+        </div>
+
+      <!-- Game 2 -->
+      <div class="bg-purple-900 bg-opacity-40 rounded-2xl p-6 w-72 shadow-lg hover:scale-105 transition-all">
+        <img src="https://i.ibb.co/7JpZ56mn/Chat-GPT-Image-Aug-3-2025-03-24-29-PM.png"
+             alt="Planet Icon"
+             class="w-24 h-24 mx-auto mb-4 animate-bounce" />
+
+        <h2 class="text-xl font-semibold text-center text-pink-300">Teka Planet</h2>
+        <p class="text-sm text-center text-gray-300 mt-2">Kenali dan teka planet dalam sistem suria kita!</p>
+        <a href="Teka Planet.html" class="block mt-4 bg-purple-600 hover:bg-purple-700 text-white text-center py-2 rounded-lg">MULA 🪐</a>
+      </div>
+
+      <!-- Game 3 -->
+      <div class="bg-yellow-800 bg-opacity-40 rounded-2xl p-6 w-72 shadow-lg hover:scale-105 transition-all">
+        <img src="https://i.ibb.co/7JpZ56mn/Chat-GPT-Image-Aug-3-2025-03-24-29-PM.png" alt="Bintang Icon" class="w-24 h-24 mx-auto mb-4 animate-bounce" />
+        <h2 class="text-xl font-semibold text-center text-yellow-200">Tangkap Bintang</h2>
+        <p class="text-sm text-center text-gray-300 mt-2">Tangkap huruf Iqra’ yang jatuh dari langit!</p>
+        <a href="Tangkap-Bintang.html" class="block mt-4 bg-yellow-600 hover:bg-yellow-700 text-white text-center py-2 rounded-lg">MULA 🌟</a>
+      </div>
+
+      <!-- Game 4 -->
+      <div class="bg-green-900 bg-opacity-40 rounded-2xl p-6 w-72 shadow-lg hover:scale-105 transition-all">
+        <img src="https://i.ibb.co/7JpZ56mn/Chat-GPT-Image-Aug-3-2025-03-24-29-PM.png" alt="Memory Icon" class="w-24 h-24 mx-auto mb-4 animate-bounce" />
+        <h2 class="text-xl font-semibold text-center text-green-300">Bina Galaksi</h2>
+        <p class="text-sm text-center text-gray-300 mt-2">Padankan bacaan dengan ayat – bantu ingatan!</p>
+        <a href="Bina Galaksi" class="block mt-4 bg-green-600 hover:bg-green-700 text-white text-center py-2 rounded-lg">MULA 🧠</a>
+      </div>
+
+    </div>
+
+    <!-- Butang kembali -->
+    <div class="mt-10 text-center">
+      <a href="index.html" class="block mt-4 bg-yellow-600 hover:bg-yellow-700 text-white text-center py-2 rounded-lg">⬅️ Kembali ke Halaman Utama</a>
+      <footer>© 2025 App Iqra Galaksi by Anaqi</footer>
+      </div>
+  </body>
+</html>

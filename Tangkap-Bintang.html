@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+  <meta charset="UTF-8">
+  <title>Tangkap Bintang</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Comic Sans MS', cursive, sans-serif;
+      background: radial-gradient(ellipse at center, #001f3f 0%, #000000 100%);
+      color: white;
+      text-align: center;
+      overflow-x: hidden;
+    }
+
+    .stars {
+      background: url('https://www.transparenttextures.com/patterns/stardust.png');
+      animation: moveStars 60s linear infinite;
+      position: fixed;
+      width: 200%;
+      height: 200%;
+      top: 0;
+      left: 0;
+      z-index: 0;
+      opacity: 0.2;
+    }
+
+    @keyframes moveStars {
+      0% { transform: translate(0, 0); }
+      100% { transform: translate(-50%, -50%); }
+    }
+
+    .container {
+      position: relative;
+      z-index: 1;
+      padding: 20px;
+    }
+
+    h1 {
+      font-size: 2.5em;
+      margin-top: 1rem;
+      color: #ffcc00;
+      text-shadow: 2px 2px #000;
+    }
+
+    .score {
+      font-size: 1.5em;
+      margin: 1rem 0;
+    }
+
+    .star {
+      position: absolute;
+      width: 50px;
+      height: 50px;
+      background: url('https://i.ibb.co/7JpZ56mn/Chat-GPT-Image-Aug-3-2025-03-24-29-PM.png') no-repeat center center;
+      background-size: contain;
+      cursor: pointer;
+      animation: fall 3s linear forwards;
+    }
+
+    @keyframes fall {
+      0% { top: -50px; }
+      100% { top: 100%; }
+    }
+
+    .start-button, .back-button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      font-size: 1.5em;
+      background-color: #ffcc00;
+      color: #333;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background-color 0.3s, transform 0.3s;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+    }
+
+    .start-button:hover, .back-button:hover {
+      background-color: #ffd700;
+      transform: scale(1.05);
+    }
+
+    .celebration {
+      display: none;
+      font-size: 2em;
+      color: #ffcc00;
+      margin-top: 20px;
+      animation: celebrate 5s ease-in-out forwards;
+    }
+
+    @keyframes celebrate {
+      0% { transform: scale(1); opacity: 0; }
+      50% { transform: scale(1.2); opacity: 1; }
+      100% { transform: scale(1); opacity: 0; }
+    }
+
+    footer {
+      margin-top: 2rem;
+      font-size: 0.9em;
+      opacity: 0.7;
+    }
+  </style>
+</head>
+<body>
+  <div class="stars"></div>
+  <div class="container">
+    <h1>🌟 Tangkap Bintang! 🌌</h1>
+    <div class="score" id="score">Skor: 0</div>
+    <button class="start-button" onclick="startGame()">Mulakan Permainan</button>
+    <div class="celebration" id="celebration">🎉 Tahniah! Anda telah menang! 🎉</div>
+    <button class="back-button" onclick="goToMiniGame()">🔙 Kembali ke Mini Game</button>
+    <footer>© 2025 App Mengaji Angkasa • Versi Demo</footer>
+  </div>
+
+  <script>
+    let score = 0;
+    let gameActive = false;
+
+    function startGame() {
+      score = 0;
+      gameActive = true;
+      document.getElementById("score").innerText = "Skor: " + score;
+      document.getElementById("celebration").style.display = "none";
+      spawnStar();
+    }
+
+    function spawnStar() {
+      if (!gameActive) return;
+
+      const star = document.createElement("div");
+      star.className = "star";
+      star.style.left = Math.random() * 100 + "vw"; // Posisi rawak di sepanjang lebar skrin
+      star.onclick = function() {
+        score++;
+        document.getElementById("score").innerText = "Skor: " + score;
+        this.remove(); // Buang bintang apabila diklik
+        spawnStar(); // Spawn bintang baru
+      };
+
+      document.body.appendChild(star);
+
+      // Jika bintang sampai ke bawah tanpa diklik
+      setTimeout(() => {
+        if (document.body.contains(star)) {
+          star.remove();
+          endGame();
+        }
+      }, 3000); // Masa jatuh bintang
+    }
+
+    function endGame() {
+      gameActive = false;
+      document.getElementById("celebration").style.display = "block"; // Tunjukkan mesej kejayaan
+    }
+
+    function goToMiniGame() {
+      window.location.href = "mini-game.html"; // Pautan ke mini-game.html
+    }
+  </script>
+</body>
+</html>

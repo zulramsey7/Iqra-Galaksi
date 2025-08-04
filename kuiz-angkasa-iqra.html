@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+  <meta charset="UTF-8">
+  <title>Kuiz Angkasa Iqra’</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Comic Sans MS', cursive, sans-serif;
+      background: radial-gradient(ellipse at center, #001f3f 0%, #000000 100%);
+      color: white;
+      text-align: center;
+      overflow-x: hidden;
+      transition: background-color 0.5s;
+    }
+
+    .flash-correct {
+      background-color: #1dff1d !important;
+    }
+
+    .flash-wrong {
+      background-color: #ff4d4d !important;
+    }
+
+    .stars {
+      background: url('https://www.transparenttextures.com/patterns/stardust.png');
+      animation: moveStars 60s linear infinite;
+      position: fixed;
+      width: 200%;
+      height: 200%;
+      top: 0;
+      left: 0;
+      z-index: 0;
+      opacity: 0.2;
+    }
+
+    @keyframes moveStars {
+      0% { transform: translate(0, 0); }
+      100% { transform: translate(-50%, -50%); }
+    }
+
+    .container {
+      position: relative;
+      z-index: 1;
+      padding: 20px;
+    }
+
+    h1 {
+      font-size: 2.5em;
+      margin-top: 1rem;
+      color: #ffcc00;
+      text-shadow: 2px 2px #000;
+      animation: fadeInDown 1s ease-in-out;
+    }
+
+    .character {
+      width: 150px;
+      animation: float 3s ease-in-out infinite;
+      margin: 1rem auto;
+    }
+
+    @keyframes float {
+      0% { transform: translateY(0); }
+      50% { transform: translateY(-15px); }
+      100% { transform: translateY(0); }
+    }
+
+    @keyframes fadeInDown {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .question-box {
+      background: rgba(255, 255, 255, 0.2);
+      border: 2px solid #ffcc00;
+      border-radius: 20px;
+      padding: 1rem;
+      max-width: 450px;
+      margin: 1rem auto;
+      box-shadow: 0 0 15px #000;
+      animation: fadeInUp 0.8s ease;
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .question {
+      font-size: 1.5em;
+      margin-bottom: 1rem;
+    }
+
+    .options button {
+      display: block;
+      width: 85%;
+      margin: 0.5rem auto;
+      padding: 0.7rem;
+      border: none;
+      border-radius: 10px;
+      font-size: 1.2em;
+      cursor: pointer;
+      background: #ffffff;
+      color: #333;
+      transition: 0.3s;
+      animation: bounceIn 0.5s ease;
+    }
+
+    .options button:hover {
+      background: #ffcc00;
+      transform: scale(1.05);
+    }
+
+    @keyframes bounceIn {
+      0% { transform: scale(0.9); opacity: 0; }
+      50% { transform: scale(1.05); opacity: 1; }
+      100% { transform: scale(1); }
+    }
+
+    .feedback {
+      font-size: 1.2em;
+      margin: 1rem 0;
+      min-height: 2em;
+    }
+
+    .next-button {
+      margin-top: 1rem;
+      padding: 0.5rem 1rem;
+      font-size: 1em;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      display: none;
+      transition: 0.3s;
+    }
+
+    .next-button:hover {
+      background-color: #0056b3;
+      transform: scale(1.05);
+    }
+
+    .back-button {
+      margin-top: 1rem;
+      padding: 0.5rem 1rem;
+      font-size: 1em;
+      background-color: #ca8a04;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    .back-button:hover {
+      background-color: #cc0000;
+    }
+
+    .celebration {
+      display: none;
+      font-size: 2em;
+      color: #ffcc00;
+      margin-top: 20px;
+      animation: celebrate 5s ease-in-out forwards; /* Ubah durasi di sini */
+    }
+
+    @keyframes celebrate {
+      0% { transform: scale(1); opacity: 0; }
+      50% { transform: scale(1.2); opacity: 1; }
+      100% { transform: scale(1); opacity: 0; }
+    }
+
+    footer {
+      margin-top: 2rem;
+      font-size: 0.9em;
+      opacity: 0.7;
+    }
+  </style>
+</head>
+<body>
+  <div class="stars"></div>
+  <div class="container">
+    <h1>🌙 Kuiz Angkasa Iqra’ 🚀</h1>
+    <img class="character" src="https://i.ibb.co/7JpZ56mn/Chat-GPT-Image-Aug-3-2025-03-24-29-PM.png" alt="Astronaut Kartun" />
+
+    <div class="question-box" id="quiz-box"></div>
+
+    <div class="feedback" id="feedback"></div>
+    <button class="next-button" onclick="nextQuestion()">Seterusnya</button>
+
+    <!-- Butang Kembali diletakkan di sini, di bawah soalan -->
+    <button class="back-button" onclick="goToMiniGame()">🔙 Kembali ke Mini Game</button>
+
+    <div class="celebration" id="celebration">🎉 Tahniah! Anda telah menyelesaikan kuiz! 🎉</div>
+
+    <footer>© 2025 App Iqra Galaksi by Anaqi</footer>
+  </div>
+
+  <script>
+    const questions = [
+      {
+        image: "https://i.ibb.co/Mr0Kw2b/Alif.png",
+        question: "Apakah huruf hijaiyah ini?",
+        options: ["Alif", "Ba", "Ta"],
+        answer: "Alif"
+      },
+      {
+        image: "https://i.ibb.co/m54bZCqS/jim.png",
+        question: "Huruf apakah ini?",
+        options: ["Jim", "Ha", "Kha"],
+        answer: "Jim"
+      },
+      {
+        image: "https://i.ibb.co/zhyvH58j/ra.png",
+        question: "Kenali huruf ini:",
+        options: ["Dal", "Dzal", "Ra"],
+        answer: "Ra"
+      },
+      {
+        image: "https://i.ibb.co/TxR0rSwV/fa.png",
+        question: "Apakah nama huruf ini?",
+        options: ["Fa", "Qaf", "Kaf"],
+        answer: "Fa"
+      },
+      {
+        image: "https://i.ibb.co/spWt4dmH/ya.png",
+        question: "Huruf ini disebut?",
+        options: ["Ya", "Waw", "Nun"],
+        answer: "Ya"
+      }
+    ];
+
+    let current = 0;
+    let score = 0;
+
+    function showQuestion() {
+      const q = questions[current];
+      const quizBox = document.getElementById("quiz-box");
+      const feedback = document.getElementById("feedback");
+      feedback.innerHTML = "";
+      document.querySelector(".next-button").style.display = "none";
+
+      quizBox.innerHTML = `
+        <div class="question">${q.question}</div>
+        <img src="${q.image}" alt="Huruf" width="100" />
+        <div class="options">
+          ${q.options.map(opt => `<button onclick="checkAnswer('${opt}', this)">${opt}</button>`).join("")}
+        </div>
+      `;
+    }
+
+    function checkAnswer(selected, button) {
+      const isCorrect = selected === questions[current].answer;
+      const feedback = document.getElementById("feedback");
+      feedback.innerHTML = isCorrect ? "✅ Betul!" : "❌ Salah!";
+
+      if (isCorrect) score++;
+
+      const buttons = document.querySelectorAll('.options button');
+      buttons.forEach(btn => btn.disabled = true);
+      button.classList.add(isCorrect ? "flash-correct" : "flash-wrong");
+
+      document.body.classList.add(isCorrect ? "flash-correct" : "flash-wrong");
+      setTimeout(() => {
+        document.body.classList.remove("flash-correct", "flash-wrong");
+        document.querySelector(".next-button").style.display = "inline-block";
+      }, 500);
+    }
+
+    function nextQuestion() {
+      current++;
+      if (current < questions.length) {
+        showQuestion();
+      } else {
+        showResult();
+      }
+    }
+
+    function showResult() {
+      const quizBox = document.getElementById("quiz-box");
+      quizBox.innerHTML = `
+        <div class="question">✨ Tahniah! Skor anda: ${score}/${questions.length}</div>
+      `;
+      document.querySelector(".next-button").style.display = "none"; // Sembunyikan butang seterusnya
+      document.getElementById("celebration").style.display = "block"; // Tunjukkan animasi kejayaan
+    }
+
+    function goToMiniGame() {
+      window.location.href = "mini-game.html";
+    }
+
+    showQuestion();
+  </script>
+</body>
+</html>
