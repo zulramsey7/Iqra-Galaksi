@@ -20,7 +20,7 @@
       margin: 20px auto;
       border-radius: 16px;
     }
-    button {
+    button, select {
       background-color: #ffeb3b;
       color: #000;
       font-weight: bold;
@@ -30,44 +30,75 @@
       border-radius: 10px;
       margin: 10px;
       cursor: pointer;
+      transition: transform 0.2s ease;
     }
-    #score {
+    button:hover, select:hover {
+      transform: scale(1.05);
+    }
+    #score, #highScore {
       font-size: 20px;
       margin-top: 10px;
+    }
+    #gameOverMsg {
+      font-size: 24px;
+      color: red;
+      margin-top: 20px;
+    }
+    @media (max-width: 600px) {
+      canvas {
+        width: 90% !important;
+        height: auto !important;
+      }
     }
   </style>
 </head>
 <body>
-  <h1 class="text-4xl font-bold mb-2">🌌 Lompat Angkasa 🌌</h1>
-  <p id="score" class="text-lg mb-4">Skor: 0</p>
+  <h1 class="text-4xl font-bold mb-2 animate-bounce">🌌 Lompat Angkasa 🌌</h1>
+  <p id="score" class="text-lg mb-1">Skor: 0</p>
+  <p id="highScore" class="text-lg mb-4">Skor Tertinggi: 0</p>
+  <select id="characterSelect">
+    <option value="astro1">🧑‍🚀 Anaqi</option>
+    <option value="astro2">👩‍🚀 Humaira</option>
+  </select>
   <button id="startBtn">🚀 Mula</button>
   <button onclick="window.location.href='mini-game.html'">⏮️ Keluar</button>
   <canvas id="gameCanvas" width="360" height="480"></canvas>
+  <div id="gameOverMsg"></div>
 
   <audio id="jumpSound" src="audio/jump.mp3"></audio>
+  <audio id="gameOverSound" src="audio/gameover.mp3"></audio>
 
   <script>
     const canvas = document.getElementById('gameCanvas');
     const ctx = canvas.getContext('2d');
     const startBtn = document.getElementById('startBtn');
     const scoreDisplay = document.getElementById('score');
+    const highScoreDisplay = document.getElementById('highScore');
     const jumpSound = document.getElementById('jumpSound');
+    const gameOverSound = document.getElementById('gameOverSound');
+    const gameOverMsg = document.getElementById('gameOverMsg');
+    const characterSelect = document.getElementById('characterSelect');
 
-    const playerImage = new Image();
-    playerImage.src = "https://i.ibb.co/r2BC5Hhm/Chat-GPT-Image-Aug-5-2025-12-55-33-AM.png"; // Ganti ikut imej karakter
+    const playerImages = {
+      astro1: "https://i.ibb.co/r2BC5Hhm/Chat-GPT-Image-Aug-5-2025-12-55-33-AM.png",
+      astro2: "https://i.ibb.co/7JpZ56mn/Chat-GPT-Image-Aug-3-2025-03-24-29-PM.pngg"
+    };
 
-    let player, gravity, jumpStrength, platforms, score, isGameOver, speed;
+    let playerImage = new Image();
+    let player, gravity, jumpStrength, platforms, score, highScore, isGameOver, speed;
     let leftPressed = false;
     let rightPressed = false;
 
     const platformColors = ['#ff5252', '#ffeb3b', '#69f0ae', '#40c4ff', '#ea80fc'];
 
     function setup() {
+      playerImage.src = playerImages[characterSelect.value];
+
       player = {
-        x: canvas.width / 2 - 20,
+        x: canvas.width / 2 - 24,
         y: canvas.height - 100,
-        width: 40,
-        height: 40,
+        width: 48,
+        height: 48,
         vy: 0
       };
 
@@ -77,8 +108,8 @@
       platforms = [];
       score = 0;
       isGameOver = false;
+      gameOverMsg.innerHTML = "";
 
-      // Platform pertama tepat bawah pemain
       platforms.push({
         x: player.x - 10,
         y: player.y + player.height,
@@ -111,16 +142,9 @@
     function drawPlatforms() {
       platforms.forEach(p => {
         const color = platformColors[p.colorIndex];
-
-        if (p.glow && p.glowTimer > 0) {
-          ctx.shadowColor = color;
-          ctx.shadowBlur = 20;
-          p.glowTimer--;
-        } else {
-          ctx.shadowBlur = 0;
-          p.glow = false;
-        }
-
+        ctx.shadowColor = p.glow && p.glowTimer > 0 ? color : "transparent";
+        ctx.shadowBlur = p.glow && p.glowTimer > 0 ? 20 : 0;
+        if (p.glowTimer > 0) p.glowTimer--;
         ctx.fillStyle = color;
         ctx.fillRect(p.x, p.y, p.width, p.height);
         ctx.shadowBlur = 0;
@@ -136,10 +160,8 @@
           p.colorIndex = Math.floor(Math.random() * platformColors.length);
           p.glow = false;
           p.glowTimer = 0;
-
           score++;
           scoreDisplay.innerText = "Skor: " + score;
-
           if (score % 10 === 0) speed += 0.3;
         }
       });
@@ -147,20 +169,15 @@
 
     function detectCollision() {
       platforms.forEach(p => {
-        const playerBottom = player.y + player.height;
-        const playerRight = player.x + player.width;
-        const playerLeft = player.x;
-        const platformTop = p.y;
-        const platformBottom = p.y + p.height;
-        const platformLeft = p.x;
-        const platformRight = p.x + p.width;
-
+        const bottom = player.y + player.height;
+        const right = player.x + player.width;
+        const left = player.x;
         if (
           player.vy > 0 &&
-          playerBottom > platformTop &&
-          playerBottom < platformTop + 10 &&
-          playerRight > platformLeft &&
-          playerLeft < platformRight
+          bottom > p.y &&
+          bottom < p.y + 10 &&
+          right > p.x &&
+          left < p.x + p.width
         ) {
           player.vy = jumpStrength;
           p.glow = true;
@@ -185,6 +202,13 @@
 
       if (player.y + player.height > canvas.height) {
         isGameOver = true;
+        gameOverSound.play();
+        if (score > highScore) {
+          highScore = score;
+          localStorage.setItem("lompatHighScore", highScore);
+        }
+        highScoreDisplay.innerText = "Skor Tertinggi: " + highScore;
+        gameOverMsg.innerHTML = 'Game Over 😵<br><button onclick="restart()" class="restart-btn">🔄 Main Semula</button>';
       }
 
       detectCollision();
@@ -192,26 +216,37 @@
       drawPlayer();
       drawPlatforms();
 
-      if (!isGameOver) {
-        requestAnimationFrame(update);
-      } else {
-        ctx.fillStyle = 'red';
-        ctx.font = '24px Comic Sans MS';
-        ctx.fillText('Game Over 😵', canvas.width / 2 - 80, canvas.height / 2);
-      }
+      if (!isGameOver) requestAnimationFrame(update);
+    }
+
+    function restart() {
+      setup();
+      update();
     }
 
     document.addEventListener('keydown', (e) => {
       if (e.code === 'ArrowLeft') leftPressed = true;
       if (e.code === 'ArrowRight') rightPressed = true;
+      if (e.code === 'Space' && isGameOver) restart();
     });
-
     document.addEventListener('keyup', (e) => {
       if (e.code === 'ArrowLeft') leftPressed = false;
       if (e.code === 'ArrowRight') rightPressed = false;
     });
+    canvas.addEventListener('touchstart', (e) => {
+      const touchX = e.touches[0].clientX;
+      const mid = canvas.getBoundingClientRect().left + canvas.width / 2;
+      if (touchX < mid) leftPressed = true;
+      else rightPressed = true;
+    });
+    canvas.addEventListener('touchend', () => {
+      leftPressed = false;
+      rightPressed = false;
+    });
 
     startBtn.addEventListener('click', () => {
+      highScore = parseInt(localStorage.getItem("lompatHighScore")) || 0;
+      highScoreDisplay.innerText = "Skor Tertinggi: " + highScore;
       setup();
       update();
     });
