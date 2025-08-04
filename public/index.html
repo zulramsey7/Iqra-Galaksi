@@ -5,8 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Iqra' Galaksi</title>
   <link href="output.css" rel="stylesheet">
-  <link rel="icon" href="/icon.png" />
-  <link rel="manifest" href="/manifest.json" />
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="icons/icon-192.png">
+  <meta name="theme-color" content="#0d1b2a" />
+
 
 
   <style>
@@ -87,9 +89,8 @@
   <script>
     window.addEventListener('DOMContentLoaded', function () {
       const music = document.getElementById('bg-music');
-      music.volume = 0.1;  // Volume 10%
+      music.volume = 0.1;
 
-      // Beberapa browser perlukan interaksi sebelum autoplay
       document.body.addEventListener('click', () => {
         if (music.paused) {
           music.play().catch(() => {});
@@ -97,6 +98,17 @@
       }, { once: true });
     });
   </script>
+
+  <!-- Pendaftaran Service Worker -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('service-worker.js')
+        .then(reg => console.log('Service Worker registered!', reg))
+        .catch(err => console.log('Service Worker failed', err));
+    }
+  </script>
+
+
 
 </body>
 </html>
