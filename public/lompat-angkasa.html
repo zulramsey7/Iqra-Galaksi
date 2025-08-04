@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Lompat Angkasa</title>
+  <link href="output.css" rel="stylesheet" />
+  <style>
+    body {
+      background: linear-gradient(to bottom, #0d47a1, #1976d2);
+      color: #fff;
+      font-family: 'Comic Sans MS', cursive;
+      text-align: center;
+      padding-top: 20px;
+    }
+    canvas {
+      background-color: #000;
+      border: 4px solid #ffeb3b;
+      display: block;
+      margin: 20px auto;
+      border-radius: 16px;
+    }
+    button {
+      background-color: #ffeb3b;
+      color: #000;
+      font-weight: bold;
+      padding: 10px 20px;
+      font-size: 18px;
+      border: none;
+      border-radius: 10px;
+      margin: 10px;
+      cursor: pointer;
+    }
+    #score {
+      font-size: 20px;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h1 class="text-4xl font-bold mb-2">🌌 Lompat Angkasa 🌌</h1>
+  <p id="score" class="text-lg mb-4">Skor: 0</p>
+  <button id="startBtn">🚀 Mula</button>
+  <button onclick="window.location.href='mini-game.html'">⏮️ Keluar</button>
+  <canvas id="gameCanvas" width="360" height="480"></canvas>
+
+  <audio id="jumpSound" src="audio/jump.mp3"></audio>
+
+  <script>
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+    const startBtn = document.getElementById('startBtn');
+    const scoreDisplay = document.getElementById('score');
+    const jumpSound = document.getElementById('jumpSound');
+
+    const playerImage = new Image();
+    playerImage.src = "https://i.ibb.co/r2BC5Hhm/Chat-GPT-Image-Aug-5-2025-12-55-33-AM.png"; // Ganti ikut imej karakter
+
+    let player, gravity, jumpStrength, platforms, score, isGameOver, speed;
+    let leftPressed = false;
+    let rightPressed = false;
+
+    const platformColors = ['#ff5252', '#ffeb3b', '#69f0ae', '#40c4ff', '#ea80fc'];
+
+    function setup() {
+      player = {
+        x: canvas.width / 2 - 20,
+        y: canvas.height - 100,
+        width: 40,
+        height: 40,
+        vy: 0
+      };
+
+      gravity = 0.3;
+      jumpStrength = -8;
+      speed = 1.5;
+      platforms = [];
+      score = 0;
+      isGameOver = false;
+
+      // Platform pertama tepat bawah pemain
+      platforms.push({
+        x: player.x - 10,
+        y: player.y + player.height,
+        width: 60,
+        height: 10,
+        glow: false,
+        glowTimer: 0,
+        colorIndex: 0
+      });
+
+      for (let i = 1; i < 6; i++) {
+        platforms.push({
+          x: Math.random() * (canvas.width - 60),
+          y: i * 90,
+          width: 60,
+          height: 10,
+          glow: false,
+          glowTimer: 0,
+          colorIndex: i % platformColors.length
+        });
+      }
+
+      scoreDisplay.innerText = "Skor: 0";
+    }
+
+    function drawPlayer() {
+      ctx.drawImage(playerImage, player.x, player.y, player.width, player.height);
+    }
+
+    function drawPlatforms() {
+      platforms.forEach(p => {
+        const color = platformColors[p.colorIndex];
+
+        if (p.glow && p.glowTimer > 0) {
+          ctx.shadowColor = color;
+          ctx.shadowBlur = 20;
+          p.glowTimer--;
+        } else {
+          ctx.shadowBlur = 0;
+          p.glow = false;
+        }
+
+        ctx.fillStyle = color;
+        ctx.fillRect(p.x, p.y, p.width, p.height);
+        ctx.shadowBlur = 0;
+      });
+    }
+
+    function updatePlatforms() {
+      platforms.forEach(p => {
+        p.y += speed;
+        if (p.y > canvas.height) {
+          p.y = -10;
+          p.x = Math.random() * (canvas.width - 60);
+          p.colorIndex = Math.floor(Math.random() * platformColors.length);
+          p.glow = false;
+          p.glowTimer = 0;
+
+          score++;
+          scoreDisplay.innerText = "Skor: " + score;
+
+          if (score % 10 === 0) speed += 0.3;
+        }
+      });
+    }
+
+    function detectCollision() {
+      platforms.forEach(p => {
+        const playerBottom = player.y + player.height;
+        const playerRight = player.x + player.width;
+        const playerLeft = player.x;
+        const platformTop = p.y;
+        const platformBottom = p.y + p.height;
+        const platformLeft = p.x;
+        const platformRight = p.x + p.width;
+
+        if (
+          player.vy > 0 &&
+          playerBottom > platformTop &&
+          playerBottom < platformTop + 10 &&
+          playerRight > platformLeft &&
+          playerLeft < platformRight
+        ) {
+          player.vy = jumpStrength;
+          p.glow = true;
+          p.glowTimer = 15;
+          jumpSound.currentTime = 0;
+          jumpSound.play();
+        }
+      });
+    }
+
+    function update() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      if (leftPressed) player.x -= 4;
+      if (rightPressed) player.x += 4;
+
+      if (player.x < 0) player.x = 0;
+      if (player.x + player.width > canvas.width) player.x = canvas.width - player.width;
+
+      player.y += player.vy;
+      player.vy += gravity;
+
+      if (player.y + player.height > canvas.height) {
+        isGameOver = true;
+      }
+
+      detectCollision();
+      updatePlatforms();
+      drawPlayer();
+      drawPlatforms();
+
+      if (!isGameOver) {
+        requestAnimationFrame(update);
+      } else {
+        ctx.fillStyle = 'red';
+        ctx.font = '24px Comic Sans MS';
+        ctx.fillText('Game Over 😵', canvas.width / 2 - 80, canvas.height / 2);
+      }
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (e.code === 'ArrowLeft') leftPressed = true;
+      if (e.code === 'ArrowRight') rightPressed = true;
+    });
+
+    document.addEventListener('keyup', (e) => {
+      if (e.code === 'ArrowLeft') leftPressed = false;
+      if (e.code === 'ArrowRight') rightPressed = false;
+    });
+
+    startBtn.addEventListener('click', () => {
+      setup();
+      update();
+    });
+  </script>
+</body>
+</html>
