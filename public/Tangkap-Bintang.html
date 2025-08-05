@@ -44,7 +44,7 @@
       text-shadow: 2px 2px #000;
     }
 
-    .score {
+    .score, .timer {
       font-size: 1.5em;
       margin: 1rem 0;
     }
@@ -57,6 +57,7 @@
       background-size: contain;
       cursor: pointer;
       animation: fall 3s linear forwards;
+      z-index: 1;
     }
 
     @keyframes fall {
@@ -65,9 +66,8 @@
     }
 
     .start-button, .back-button {
-      margin-top: 20px;
       padding: 10px 20px;
-      font-size: 1.5em;
+      font-size: 1.2em;
       background-color: #ffcc00;
       color: #333;
       border: none;
@@ -84,10 +84,10 @@
 
     .celebration {
       display: none;
-      font-size: 2em;
+      font-size: 1.2em;
       color: #ffcc00;
-      margin-top: 20px;
       animation: celebrate 5s ease-in-out forwards;
+      text-align: center;
     }
 
     @keyframes celebrate {
@@ -96,34 +96,84 @@
       100% { transform: scale(1); opacity: 0; }
     }
 
+    .bottom-panel {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background: rgba(0, 0, 0, 0.85);
+      padding: 10px 0;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .bottom-panel button {
+      margin: 0;
+    }
+
     footer {
-      margin-top: 2rem;
-      font-size: 0.9em;
-      opacity: 0.7;
+      font-size: 0.8em;
+      opacity: 0.5;
     }
   </style>
 </head>
 <body>
   <div class="stars"></div>
+
   <div class="container">
     <h1>🌟 Tangkap Bintang! 🌌</h1>
+    <div class="timer" id="timer">Masa: 30s</div>
     <div class="score" id="score">Skor: 0</div>
+  </div>
+
+  <div class="bottom-panel">
     <button class="start-button" onclick="startGame()">Mulakan Permainan</button>
     <div class="celebration" id="celebration">🎉 Tahniah! Anda telah menang! 🎉</div>
+    <div class="celebration" id="gameover" style="color: #ff6666;">⏰ Masa Tamat! Skor Akhir: <span id="final-score">0</span></div>
     <button class="back-button" onclick="goToMiniGame()">🔙 Kembali ke Mini Game</button>
-    <footer>© 2025 App Mengaji Angkasa • Versi Demo</footer>
+    <footer>© 2025 App Iqra Galaksi by Anaqi</footer>
   </div>
+
+  <!-- AUDIO -->
+  <audio id="clickSound" src="audio/click.mp3" preload="auto"></audio>
+  <audio id="bombSound" src="audio/bomb.mp3" preload="auto"></audio>
 
   <script>
     let score = 0;
     let gameActive = false;
+    let timeLeft = 30;
+    let timerInterval;
+
+    const clickSound = document.getElementById("clickSound");
+    const bombSound = document.getElementById("bombSound");
 
     function startGame() {
       score = 0;
+      timeLeft = 30;
       gameActive = true;
+
       document.getElementById("score").innerText = "Skor: " + score;
+      document.getElementById("timer").innerText = "Masa: " + timeLeft + "s";
       document.getElementById("celebration").style.display = "none";
+      document.getElementById("gameover").style.display = "none";
+
+      startTimer();
       spawnStar();
+    }
+
+    function startTimer() {
+      timerInterval = setInterval(() => {
+        timeLeft--;
+        document.getElementById("timer").innerText = "Masa: " + timeLeft + "s";
+
+        if (timeLeft <= 0) {
+          clearInterval(timerInterval);
+          endGame(false);
+        }
+      }, 1000);
     }
 
     function spawnStar() {
@@ -131,32 +181,44 @@
 
       const star = document.createElement("div");
       star.className = "star";
-      star.style.left = Math.random() * 100 + "vw"; // Posisi rawak di sepanjang lebar skrin
-      star.onclick = function() {
+      star.style.left = Math.random() * 90 + "vw";
+
+      star.onclick = function () {
         score++;
         document.getElementById("score").innerText = "Skor: " + score;
-        this.remove(); // Buang bintang apabila diklik
-        spawnStar(); // Spawn bintang baru
+        clickSound.play();
+        this.remove();
+        spawnStar();
       };
 
       document.body.appendChild(star);
 
-      // Jika bintang sampai ke bawah tanpa diklik
       setTimeout(() => {
         if (document.body.contains(star)) {
+          bombSound.play();
           star.remove();
-          endGame();
         }
-      }, 3000); // Masa jatuh bintang
+        if (gameActive) {
+          spawnStar();
+        }
+      }, 3000);
     }
 
-    function endGame() {
+    function endGame(won = true) {
       gameActive = false;
-      document.getElementById("celebration").style.display = "block"; // Tunjukkan mesej kejayaan
+      clearInterval(timerInterval);
+      document.querySelectorAll(".star").forEach(s => s.remove());
+
+      if (won) {
+        document.getElementById("celebration").style.display = "block";
+      } else {
+        document.getElementById("final-score").innerText = score;
+        document.getElementById("gameover").style.display = "block";
+      }
     }
 
     function goToMiniGame() {
-      window.location.href = "mini-game.html"; // Pautan ke mini-game.html
+      window.location.href = "mini-game.html";
     }
   </script>
 </body>
