@@ -1,58 +1,59 @@
 <!DOCTYPE html>
 <html lang="ms">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
   <title>Tangkap Bintang</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
-    body {
+    html, body {
       margin: 0;
+      padding: 0;
+      overflow: hidden;
       font-family: 'Comic Sans MS', cursive, sans-serif;
       background: radial-gradient(ellipse at center, #001f3f 0%, #000000 100%);
       color: white;
-      text-align: center;
-      overflow-x: hidden;
+      touch-action: manipulation;
     }
 
     .stars {
-      background: url('https://www.transparenttextures.com/patterns/stardust.png');
-      animation: moveStars 60s linear infinite;
       position: fixed;
-      width: 200%;
-      height: 200%;
-      top: 0;
-      left: 0;
-      z-index: 0;
+      width: 100vw;
+      height: 100vh;
+      background: url('https://www.transparenttextures.com/patterns/stardust.png');
+      background-size: contain;
+      animation: moveStars 60s linear infinite;
       opacity: 0.2;
+      z-index: 0;
     }
 
     @keyframes moveStars {
-      0% { transform: translate(0, 0); }
-      100% { transform: translate(-50%, -50%); }
+      0% { background-position: 0 0; }
+      100% { background-position: -1000px -1000px; }
     }
 
     .container {
       position: relative;
-      z-index: 1;
-      padding: 20px;
+      z-index: 2;
+      padding: 2vh 5vw;
+      text-align: center;
     }
 
     h1 {
-      font-size: 2.5em;
-      margin-top: 1rem;
+      font-size: 5vw;
+      margin-top: 2vh;
       color: #ffcc00;
       text-shadow: 2px 2px #000;
     }
 
     .score, .timer {
-      font-size: 1.5em;
-      margin: 1rem 0;
+      font-size: 4vw;
+      margin: 1vh 0;
     }
 
     .star {
       position: absolute;
-      width: 50px;
-      height: 50px;
+      width: 8vw;
+      height: 8vw;
       background: url('https://i.ibb.co/7JpZ56mn/Chat-GPT-Image-Aug-3-2025-03-24-29-PM.png') no-repeat center center;
       background-size: contain;
       cursor: pointer;
@@ -61,13 +62,13 @@
     }
 
     @keyframes fall {
-      0% { top: -50px; }
-      100% { top: 100%; }
+      0% { top: -10vh; }
+      100% { top: 100vh; }
     }
 
     .start-button, .back-button {
-      padding: 10px 20px;
-      font-size: 1.2em;
+      padding: 1vh 3vw;
+      font-size: 4vw;
       background-color: #ffcc00;
       color: #333;
       border: none;
@@ -84,7 +85,7 @@
 
     .celebration {
       display: none;
-      font-size: 1.2em;
+      font-size: 4vw;
       color: #ffcc00;
       animation: celebrate 5s ease-in-out forwards;
       text-align: center;
@@ -102,20 +103,16 @@
       left: 0;
       width: 100%;
       background: rgba(0, 0, 0, 0.85);
-      padding: 10px 0;
-      z-index: 2;
+      padding: 1vh 0;
+      z-index: 3;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 10px;
-    }
-
-    .bottom-panel button {
-      margin: 0;
+      gap: 1vh;
     }
 
     footer {
-      font-size: 0.8em;
+      font-size: 2.5vw;
       opacity: 0.5;
     }
   </style>
@@ -130,7 +127,7 @@
   </div>
 
   <div class="bottom-panel">
-    <button class="start-button" onclick="startGame()">Mulakan Permainan</button>
+    <button class="start-button" onclick="startGame()">🚀 Mulakan Permainan</button>
     <div class="celebration" id="celebration">🎉 Tahniah! Anda telah menang! 🎉</div>
     <div class="celebration" id="gameover" style="color: #ff6666;">⏰ Masa Tamat! Skor Akhir: <span id="final-score">0</span></div>
     <button class="back-button" onclick="goToMiniGame()">🔙 Kembali ke Mini Game</button>
@@ -146,6 +143,7 @@
     let gameActive = false;
     let timeLeft = 30;
     let timerInterval;
+    let maxStars = 3;
 
     const clickSound = document.getElementById("clickSound");
     const bombSound = document.getElementById("bombSound");
@@ -178,6 +176,10 @@
 
     function spawnStar() {
       if (!gameActive) return;
+
+      // Limit how many stars are active
+      const existingStars = document.querySelectorAll('.star');
+      if (existingStars.length >= maxStars) return;
 
       const star = document.createElement("div");
       star.className = "star";
