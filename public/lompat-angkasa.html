@@ -2,7 +2,7 @@
 <html lang="ms">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0" />
   <title>Lompat Angkasa</title>
   <link href="output.css" rel="stylesheet" />
   <style>
@@ -12,13 +12,21 @@
       font-family: 'Comic Sans MS', cursive;
       text-align: center;
       padding-top: 20px;
+      margin: 0;
+      touch-action: manipulation;
+      -webkit-user-select: none;
+      -webkit-tap-highlight-color: transparent;
     }
     canvas {
       background-color: #000;
       border: 4px solid #ffeb3b;
+      border-radius: 16px;
       display: block;
       margin: 20px auto;
-      border-radius: 16px;
+      width: 100%;
+      max-width: 400px;
+      height: auto;
+      aspect-ratio: 3 / 4;
     }
     button, select {
       background-color: #ffeb3b;
@@ -31,6 +39,7 @@
       margin: 10px;
       cursor: pointer;
       transition: transform 0.2s ease;
+      touch-action: manipulation;
     }
     button:hover, select:hover {
       transform: scale(1.05);
@@ -44,12 +53,6 @@
       color: red;
       margin-top: 20px;
     }
-    @media (max-width: 600px) {
-      canvas {
-        width: 90% !important;
-        height: auto !important;
-      }
-    }
   </style>
 </head>
 <body>
@@ -60,7 +63,7 @@
     <option value="astro1">🧑‍🚀 Anaqi</option>
     <option value="astro2">👩‍🚀 Humaira</option>
   </select>
-  <button id="startBtn">🚀 Mula</button>
+  <button onclick="startGame()">🚀 Mula</button>
   <button onclick="window.location.href='mini-game.html'">⏮️ Keluar</button>
   <canvas id="gameCanvas" width="360" height="480"></canvas>
   <div id="gameOverMsg"></div>
@@ -71,7 +74,6 @@
   <script>
     const canvas = document.getElementById('gameCanvas');
     const ctx = canvas.getContext('2d');
-    const startBtn = document.getElementById('startBtn');
     const scoreDisplay = document.getElementById('score');
     const highScoreDisplay = document.getElementById('highScore');
     const jumpSound = document.getElementById('jumpSound');
@@ -81,7 +83,7 @@
 
     const playerImages = {
       astro1: "https://i.ibb.co/r2BC5Hhm/Chat-GPT-Image-Aug-5-2025-12-55-33-AM.png",
-      astro2: "https://i.ibb.co/7JpZ56mn/Chat-GPT-Image-Aug-3-2025-03-24-29-PM.pngg"
+      astro2: "https://i.ibb.co/YZjFzWS/astro2.png" // Gantikan dengan link betul jika ada
     };
 
     let playerImage = new Image();
@@ -93,15 +95,7 @@
 
     function setup() {
       playerImage.src = playerImages[characterSelect.value];
-
-      player = {
-        x: canvas.width / 2 - 24,
-        y: canvas.height - 100,
-        width: 48,
-        height: 48,
-        vy: 0
-      };
-
+      player = { x: canvas.width / 2 - 24, y: canvas.height - 100, width: 48, height: 48, vy: 0 };
       gravity = 0.3;
       jumpStrength = -8;
       speed = 1.5;
@@ -110,28 +104,10 @@
       isGameOver = false;
       gameOverMsg.innerHTML = "";
 
-      platforms.push({
-        x: player.x - 10,
-        y: player.y + player.height,
-        width: 60,
-        height: 10,
-        glow: false,
-        glowTimer: 0,
-        colorIndex: 0
-      });
-
+      platforms.push({ x: player.x - 10, y: player.y + player.height, width: 60, height: 10, glow: false, glowTimer: 0, colorIndex: 0 });
       for (let i = 1; i < 6; i++) {
-        platforms.push({
-          x: Math.random() * (canvas.width - 60),
-          y: i * 90,
-          width: 60,
-          height: 10,
-          glow: false,
-          glowTimer: 0,
-          colorIndex: i % platformColors.length
-        });
+        platforms.push({ x: Math.random() * (canvas.width - 60), y: i * 90, width: 60, height: 10, glow: false, glowTimer: 0, colorIndex: i % platformColors.length });
       }
-
       scoreDisplay.innerText = "Skor: 0";
     }
 
@@ -172,13 +148,7 @@
         const bottom = player.y + player.height;
         const right = player.x + player.width;
         const left = player.x;
-        if (
-          player.vy > 0 &&
-          bottom > p.y &&
-          bottom < p.y + 10 &&
-          right > p.x &&
-          left < p.x + p.width
-        ) {
+        if (player.vy > 0 && bottom > p.y && bottom < p.y + 10 && right > p.x && left < p.x + p.width) {
           player.vy = jumpStrength;
           p.glow = true;
           p.glowTimer = 15;
@@ -190,10 +160,8 @@
 
     function update() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-
       if (leftPressed) player.x -= 4;
       if (rightPressed) player.x += 4;
-
       if (player.x < 0) player.x = 0;
       if (player.x + player.width > canvas.width) player.x = canvas.width - player.width;
 
@@ -224,6 +192,13 @@
       update();
     }
 
+    function startGame() {
+      highScore = parseInt(localStorage.getItem("lompatHighScore")) || 0;
+      highScoreDisplay.innerText = "Skor Tertinggi: " + highScore;
+      setup();
+      update();
+    }
+
     document.addEventListener('keydown', (e) => {
       if (e.code === 'ArrowLeft') leftPressed = true;
       if (e.code === 'ArrowRight') rightPressed = true;
@@ -233,6 +208,7 @@
       if (e.code === 'ArrowLeft') leftPressed = false;
       if (e.code === 'ArrowRight') rightPressed = false;
     });
+
     canvas.addEventListener('touchstart', (e) => {
       const touchX = e.touches[0].clientX;
       const mid = canvas.getBoundingClientRect().left + canvas.width / 2;
@@ -244,11 +220,9 @@
       rightPressed = false;
     });
 
-    startBtn.addEventListener('click', () => {
-      highScore = parseInt(localStorage.getItem("lompatHighScore")) || 0;
-      highScoreDisplay.innerText = "Skor Tertinggi: " + highScore;
-      setup();
-      update();
+    // Prevent gesture zoom
+    document.addEventListener('gesturestart', function (e) {
+      e.preventDefault();
     });
   </script>
 </body>
