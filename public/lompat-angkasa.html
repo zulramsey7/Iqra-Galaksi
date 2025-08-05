@@ -193,6 +193,10 @@
     }
 
     function startGame() {
+      // Aktifkan audio secara sah (untuk browser mobile)
+      jumpSound.play().then(() => jumpSound.pause());
+      gameOverSound.play().then(() => gameOverSound.pause());
+
       highScore = parseInt(localStorage.getItem("lompatHighScore")) || 0;
       highScoreDisplay.innerText = "Skor Tertinggi: " + highScore;
       setup();
